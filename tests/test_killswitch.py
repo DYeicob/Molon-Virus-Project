@@ -1,4 +1,3 @@
-# tests/test_killswitch.py
 import os
 from pathlib import Path
 import importlib
