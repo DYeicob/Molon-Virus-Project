@@ -1,40 +1,43 @@
-from flask import Flask, request, jsonify, render_template_string, redirect
+from flask import Flask, request, jsonify, redirect
+
 app = Flask(__name__)
 
-command_store = {"cmd": ""}
-
-HTML = """
-<!doctype html>
-<title>C2 Simulado</title>
-<h1>C2 Dashboard (simulado, benigno)</h1>
-<form action="/set" method="post">
-  <label>Comando (rickroll / popup / ''):</label>
-  <input name="cmd" />
-  <input type="submit" value="Enviar" />
-</form>
-<p>Comando actual: {{cmd}}</p>
-"""
+# Última orden enviada a los clientes
+command_buffer = {"cmd": ""}
 
 @app.route("/")
-def index():
-    return render_template_string(HTML, cmd=command_store["cmd"])
+def home():
+    return """
+    <h2>C2 de demostración académica</h2>
+    <p>Este panel NO controla nada real. Solo es un panel educativo.</p>
+    <form action="/set" method="post">
+        <input name="cmd" placeholder="Comando benigno">
+        <button type="submit">Enviar</button>
+    </form>
+    """
 
 @app.route("/set", methods=["POST"])
 def set_cmd():
-    cmd = request.form.get("cmd", "").strip()
-    command_store["cmd"] = cmd
-    return redirect("/")
+    """
+    Establece un comando benigno para que el cliente lo recoja.
+    """
+    cmd = request.form.get("cmd", "")
+    command_buffer["cmd"] = cmd
+    return f"Comando establecido: {cmd}"
 
 @app.route("/c2", methods=["POST"])
-def c2():
-    data = request.get_json(silent=True) or {}
-    agent = data.get("agent", "unknown")
-    cmd = command_store.get("cmd", "")
-    resp = {"cmd": cmd}
-    # opcional: limpiar comando para que se entregue una sola vez
-    command_store["cmd"] = ""
-    app.logger.info(f"Beacon from {agent}, delivering cmd: {cmd}")
-    return jsonify(resp)
+def beacon():
+    """
+    Endpoint que consultarían los clientes.
+    Devuelve el comando y lo limpia.
+    """
+    agent = request.json.get("agent", "unknown")
+    cmd = command_buffer["cmd"]
+
+    # limpiamos para simular "one-time commands"
+    command_buffer["cmd"] = ""
+
+    return jsonify({"agent": agent, "cmd": cmd})
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5050)
