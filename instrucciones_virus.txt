@@ -1,0 +1,44 @@
+¿Qué debería hacer un virus molón?
+
+1. Infección (que si se borra vuestro fichero no os afecte)
+
+Entrar por un vector divertido, haced un email de phishing ridículo, o una web cringe de esas
+que se os dan tan bien. Y que descargue el bicho.
+
+vía a) Infectar otro proceso (migrar) p.ej inyectando en su espacio de memoria un thread.
+vía b) Pasar a modo fileless (LOLbas)
+
+2. Persistencia y ocultación (que si se hace reboot no os afecte)
+
+Registrad una tarea programada, meteos en el registro, o en el motd (en Linux hay sistemas muy
+ridículos para conseguir persistencia) que el bicho se ejecute cada vez que se reinicie la máquina
+si queréis ser muy mala gente, sobreescribid el proceso de boot de la máquina para sobrevivir a 
+restauraciones de sistema (o reflashead la uefi para sobrevivir a formateos xd)
+
+Podéis usar un rootkit para darle por saco a los av, si os guardáis en el swap vais a poder evadir
+a la mayoría de forenses.
+
+3. Propagación [opcional] (que se replique)
+
+Enviad correos, copiaos a USBs, atacad redes wifi, smb, carpetas compartidas, enviad mensajes de whatsapp
+lo que más rabia os de. Este punto es 100% opcional ya que no se podrá evaluar.
+
+4. C2 (que seáis conscientes de habéis conseguido infectar)
+
+Contactad con una ip pública de vuestra propiedad sin que os detecten. Podéis usar beaconing, cifrado, etc
+Aquí podéis codificar un panel de control super guay que permita ejecutar acciones sobre las víctimas.
+
+5. Payload (los fuegos artificiales)
+
+Cuando se den las condiciones idóneas (cómo mucho 60s desde el click inicial) vuestro virus debe hacer algo,
+ese algo puede ser cambiar el fondo de escritorio, reproducir un rickroll o cifrar todos los archivos de la máquina...
+
+Reglas:
+
+- No podéis usar proxy ni tor, eso es trampa, conexión directa con el C2. Esta IP debe estar permanentemente activa y no
+debe filtrar el acceso a ningún puerto por ip, país, etc. No podéis esconderla detrás de cdns, etc.
+- No podéis usar bombas temporales, todo tiene que pasar como mucho en 60 segundos desde que se hace click
+(si el payload está codificado en el c2, este tiene que tener un bot que envíe la acción en menos de 60 segundos)
+- No podéis usar técnicas que no estén en el reporte que me entreguéis
+- No podéis causar daño real irreversible (los accidentes ocurren y alguien puede hacer un missclick y ejecutarlo en entorno real)
+- Es obligatorio esconder un killswitch, esto es: Un fichero, dominio o url, el cual, si existe, el virus se desactivará. Y documentarlo en el reporte
