@@ -1,138 +1,134 @@
-# Instrucciones de Ejecución en VM (Proyecto Virus Molón — Versión Académica)
+# 🚀 Execution Instructions for VM (Academic Virus Simulator)
 
-Este proyecto debe ejecutarse **exclusivamente en una máquina virtual aislada**, nunca en el sistema anfitrión.
-
----
-
-# 1. Requisitos del entorno
-
-- **Máquina Virtual** (Windows o Linux)
-- **Python 3.8+**
-- **pip** instalado
-- Conexión a Internet (solo para comunicar con el C2 local/remoto)
+**WARNING:** This project must be executed **exclusively within an isolated Virtual Machine (VM)**. Never run this code on your host operating system.
 
 ---
 
-# 2. Crear entorno virtual y preparar dependencias
+## 1. Environment Requirements
 
-Dentro de la carpeta raíz del proyecto:
+- **Virtual Machine:** Windows (recommended for full feature support) or Linux.
+- **Python:** Version 3.8 or higher.
+- **Package Manager:** `pip` installed.
+- **Network:** Internet access (only if communicating with a remote C2) or Local Host access.
+
+---
+
+## 2. Environment Setup
+
+From the project root directory, create a virtual environment to isolate dependencies:
 
 ```bash
 python -m venv venv
-````
 
-Activar el entorno:
-
-**Windows**
-
-```bash
-venv\Scripts\activate
 ```
 
-**Linux/macOS**
+### Activate the Environment:
+
+**Windows:**
+
+```powershell
+venv\Scripts\activate
+
+```
+
+**Linux/macOS:**
 
 ```bash
 source venv/bin/activate
+
 ```
 
-Instalar dependencias:
+### Install Dependencies:
 
 ```bash
 pip install -r requirements.txt
 pip install -r server_c2/requirements.txt
+
 ```
 
 ---
 
-# 3. Ejecutar el servidor C2
+## 3. Launching the C2 Server
 
-En una terminal:
+In a dedicated terminal window:
 
 ```bash
 python server_c2/server.py
-```
-
-El panel estará disponible en:
 
 ```
-http://0.0.0.0:5050/
-```
 
-Desde el navegador podrás enviar comandos **benignos** al cliente.
+The control panel will be accessible at: `http://localhost:5050/`
+From this web interface, you can stage **benign commands** for the connected agents.
 
 ---
 
-# 4. Ejecutar el cliente (virus académico)
+## 4. Running the Agent (Academic Virus)
 
-En otra terminal, manteniendo el entorno virtual activo:
+In a separate terminal, ensuring the virtual environment is still active:
 
 ```bash
-python src/core.py
+python src/agent.py
+
 ```
 
-Si todo funciona correctamente:
+### Expected Behavior:
 
-* Se realizará un "beacon" al C2 en menos de 60 segundos.
-* El C2 podrá responder con un comando benigno.
-* Se ejecutará un payload seguro como abrir un Rickroll o cambiar el fondo.
+* The agent will perform a "beacon" to the C2 server within the first 60 seconds.
+* The C2 will respond with any staged benign commands.
+* If no command is received, a default safe payload (e.g., Rickroll) will trigger.
 
 ---
 
-# 5. Probar el killswitch
+## 5. Testing the Killswitch
 
-El sistema debe deshabilitarse **automáticamente** si detecta un archivo, dominio o URL concreta.
+The system is designed to **automatically disable itself** if a specific trigger is detected.
 
-## Windows
+### Windows (Primary Trigger):
 
-Crear archivo:
+Create the trigger file:
 
-```bash
-echo off > C:\killswitch.txt
+```powershell
+echo "off" > C:\killswitch_mvs.txt
+
 ```
 
-## Linux/macOS
+### Linux/macOS:
 
 ```bash
-touch /tmp/killswitch
+touch /tmp/killswitch_mvs
+
 ```
 
-Al detectar el archivo, el cliente:
-
-* detendrá su ejecución
-* ignorará cualquier comando del C2
-* no ejecutará payloads
+**Verification:** Upon detecting the file, the agent will log the detection, cease execution, and ignore all C2 commands or payloads.
 
 ---
 
-# 6. Limpieza completa del entorno
+## 6. Environment Cleanup
 
-Cuando termines las pruebas, elimina todo.
+Once testing is complete, remove all project traces from the VM.
 
-## Windows
+**Windows:**
 
-```bash
+```powershell
 rmdir /S /Q venv
-rmdir /S /Q .
+del mvs_sim.log
+# Note: Manually delete the scheduled task using 'schtasks /delete /TN "MVS_Simulation"'
+
 ```
 
-## Linux/macOS
+**Linux/macOS:**
 
 ```bash
-rm -rf venv
-rm -rf .
+rm -rf venv mvs_sim.log
+
 ```
 
-Con esto, la VM vuelve a su estado sin rastro del proyecto.
-
 ---
 
-# 7. Notas importantes
+## 7. Critical Safety Notes
 
-* Este proyecto es **100% educativo** y no debe instalarse en un sistema real.
-* Ningún módulo implementa técnicas dañinas.
-* La “persistencia” es simulada.
-* El C2 solo envía comandos triviales.
-* No hay cifrado, exploits ni modificaciones del sistema real.
-* El vector de infección es **ficticio**.
-
----
+* **Educational Only:** This project is for academic demonstration and must not be used on production systems.
+* **Non-Malicious:** No modules implement destructive techniques.
+* **Simulated Persistence:** Persistence methods are visible and easily reversible.
+* **No Obfuscation:** There is no encryption, exploit code, or rootkit functionality included.
+* **Mock Vectors:** The infection vectors (phishing/web) are purely for flow demonstration.
