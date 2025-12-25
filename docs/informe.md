@@ -1,101 +1,78 @@
-# INFORME DEL PROYECTO — Virus “Molón” Académico
+# 🛡️ PROJECT REPORT — Academic "Molon" Virus Simulator
 
-**Asignatura:** Ciberseguridad  
-**Alumno:**  
-**Fecha:**  
-
----
-
-## 1. Objetivos del proyecto
-
-Resumen del propósito académico:
-
-- Entender vectores de infección de forma controlada
-- Analizar persistencia no maliciosa
-- Simular un C2 benigno
-- Incluir payloads seguros
-- Añadir killswitch documentado
+## 1. Project Objectives
+The primary purpose of this project is to demonstrate the lifecycle of a cyber threat within a strictly educational and controlled environment. The key goals include:
+* **Understanding Infection Vectors:** Emulating delivery methods without executing malicious code.
+* **Analyzing Non-Malicious Persistence:** Studying how software remains active after reboots.
+* **Simulating Benign C2:** Implementing command-and-control communication protocols.
+* **Safe Payload Execution:** Demonstrating "Actions on Objectives" using harmless triggers.
+* **Mandatory Killswitch:** Ensuring immediate deactivation via a documented trigger.
 
 ---
 
-## 2. Arquitectura general del proyecto
+## 2. General System Architecture
+The project is modularized to represent the different stages of the **Cyber Kill Chain**:
 
-Explicar los módulos:
+* `src/agent.py`: The main orchestrator that manages the execution flow.
+* `src/persistence.py`: Handles simulated persistence (e.g., Scheduled Tasks).
+* `src/killswitch.py`: The safety module that checks for deactivation triggers.
+* `src/c2_client.py`: Manages beaconing and benign communication with the server.
+* `server_c2/`: A Flask-based dashboard for remote management.
+* `phishing_demo/`: Mock infection vectors used for social engineering emulation.
 
-- `src/core.py` — flujo principal
-- `src/persistence.py` — persistencia simulada
-- `src/killswitch.py` — desactivación
-- `src/c2_client.py` — comunicaciones C2 benignas
-- `server_c2/` — panel C2 Flask
-- `phishing_demo/` — vector de infección ficticio
 
-Incluye un diagrama (puedes pegar uno creado en Excalidraw).
-
----
-
-## 3. Vector de infección (ficticio)
-
-- Email ridículo (`phishing_demo/email.html`)
-- Página web cringe (`phishing_demo/web_cringe/`)
-- El archivo descargado **no contiene nada peligroso**, solo simula el flujo.
-
-Explica por qué no se hace daño real.
 
 ---
 
-## 4. Persistencia
+## 3. Infection Vector (Mockup)
+The simulation utilizes two creative social engineering lures:
+* **Mock Phishing Email:** (`phishing_demo/email.html`)
+* **"Cringe" Website:** (`phishing_demo/web_cringe/`)
 
-Describe lo que implementaste (ejemplo):
-
-- Tarea programada simulada
-- Registro (solo educativo)
-- Avoid malware real
-
----
-
-## 5. C2 (Command & Control) benigno
-
-Explica:
-
-- Servidor en Flask
-- Cliente en `src/c2_client.py`
-- Solo recibe comandos tipo “rickroll”, “mostrar alerta”, etc.
-- Sin proxies, sin cifrado encubierto
+**Safety Note:** The downloaded file contains no malicious code. It is a standard Python script/executable that simulates the process of "Initial Access" without exploiting system vulnerabilities or causing harm.
 
 ---
 
-## 6. Payload seguro
-
-Ejemplos permitidos:
-
-- Cambiar fondo del escritorio
-- Mostrar ventanas emergentes
-- Reproducir un sonido
-- Abrir un vídeo de YouTube (rickroll)
+## 4. Persistence
+This module ensures the agent survives system restarts to demonstrate how real malware maintains a foothold:
+* **Simulated Scheduled Task:** Uses `schtasks` on Windows to trigger the agent upon user logon.
+* **Educational Registry Use:** References how registry keys can be used for persistence.
+* **Focus:** The goal is to study detection, not to hide from the user; therefore, the tasks are clearly named and easily reversible.
 
 ---
 
-## 7. Killswitch
-
-Explicar:
-
-- Ruta exacta del killswitch  
-- Si existe, **el programa entero se autodeshabilita**
-
----
-
-## 8. Limitaciones éticas
-
-Ver archivo `ethical_limitations.md`.
+## 5. Benign Command & Control (C2)
+The communication infrastructure is built on:
+* **Flask Server:** A centralized hub to stage commands.
+* **Agent Client:** Located in `src/c2_client.py`, it performs periodic "beacons" to check for new instructions.
+* **Functional Constraints:** To comply with lab rules, no proxies, Tor, or encrypted tunnels are used. All traffic is direct and transparent.
 
 ---
 
-## 9. Instrucciones de ejecución
-
-Ver `run_instructions.md`.
+## 6. Safe Payloads
+Upon receiving a command or reaching a 60-second timeout, the agent triggers a benign payload:
+* **Desktop Interaction:** Opening a YouTube video (The "Rickroll").
+* **UI Alerts:** Displaying a harmless system popup message.
+* **System Feedback:** Writing events to a local log file for forensic analysis.
 
 ---
 
-## 10. Conclusión
+## 7. Killswitch (Emergency Stop)
+A hardcoded safety mechanism is integrated into the core logic:
+* **Trigger Path:** `C:\killswitch_mvs.txt`
+* **Functionality:** If the agent detects this file at any point, it will **immediately self-terminate** and cease all background activities. This is a critical guardrail for ethical security simulations.
 
-Reflexión sobre lo aprendido.
+---
+
+## 8. Ethical Limitations
+Detailed technical exclusions (such as the absence of rootkits, memory injection, or real propagation) are documented in the `ethical_limitations.md` file. This project strictly follows "Red Team" rules of engagement.
+
+---
+
+## 9. Execution Instructions
+Step-by-step setup for isolated Virtual Machine environments is provided in the `run_instructions.md` file.
+
+---
+
+## 10. Conclusion
+This project provided a comprehensive look at adversarial behavior. By building a "virus" from scratch, I gained a deeper understanding of how to defend against one. The most significant takeaway was the importance of balancing technical complexity with ethical responsibility and safety guardrails.
